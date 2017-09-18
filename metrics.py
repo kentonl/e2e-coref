@@ -2,6 +2,9 @@ import numpy as np
 from collections import Counter
 from sklearn.utils.linear_assignment_ import linear_assignment
 
+"""
+Mostly borrowed from https://github.com/clarkkev/deep-coref/blob/master/evaluation.py
+"""
 
 def f1(p_num, p_den, r_num, r_den, beta=1):
     p = 0 if p_den == 0 else p_num / float(p_den)
