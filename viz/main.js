@@ -145,15 +145,22 @@ function load_example(lines) {
 }
 
 $(document).ready(function() {
-    $.ajax({
-        url : get_param("path"),
-        dataType: "text",
-        success : function (data) {
-            var lines = data.split("\n");
-            $(window).on("hashchange", function() {
-                load_example(lines);
-            });
-            load_example(lines);
+    var path = get_param("path");
+    if(path.length >= 1) {
+        if (path[path.length - 1] == "/") {
+            // Strip trailing slash if present.
+            path = path.substr(0, path.length - 1);
         }
-    });
+        $.ajax({
+            url : path,
+            dataType: "text",
+            success : function (data) {
+                var lines = data.split("\n");
+                $(window).on("hashchange", function() {
+                    load_example(lines);
+                });
+                load_example(lines);
+            }
+        });
+    }
 });
