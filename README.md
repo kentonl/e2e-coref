@@ -73,3 +73,4 @@ A demo of the code can be found here: https://kentonl.github.io/e2e-coref.
 * It does not use GPUs by default. Instead, it looks for the `GPU` environment variable, which the code treats as shorthand for `CUDA_VISIBLE_DEVICES`.
 * The evaluator should not be run on GPUs, since evaluating full documents does not fit within GPU memory constraints.
 * The training runs indefinitely and needs to be terminated manually. The model generally converges at about 400k steps and within 48 hours.
+* On some machines, the custom kernels seem to have compatibility issues with virtualenv. If you are using virtualenv and observe segmentation faults, trying running the experiments without virtualenv.
