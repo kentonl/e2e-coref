@@ -13,8 +13,15 @@ import coref_model as cm
 import util
 
 if __name__ == "__main__":
-  name = os.environ["EXP"]
-  task_index = int(os.environ["TASK"])
+  if len(sys.argv) > 1:
+    name = sys.argv[1]
+  else:
+    name = os.environ["EXP"]
+  if len(sys.argv) > 2:
+    task_index = sys.argv[2]
+  else:
+    task_index = os.environ["TASK"]
+  task_index = int(task_index)
   config = util.get_config("experiments.conf")[name]
   report_frequency = config["report_frequency"]
 

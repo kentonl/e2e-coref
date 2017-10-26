@@ -33,6 +33,7 @@ if __name__ == "__main__":
   init_op = tf.global_variables_initializer()
 
   log_dir = config["log_dir"]
+  writer = tf.summary.FileWriter(os.path.join(log_dir, "train"), flush_secs=20)
 
   # Create a "supervisor", which oversees the training process.
   sv = tf.train.Supervisor(logdir=log_dir,
@@ -56,7 +57,8 @@ if __name__ == "__main__":
         steps_per_second = tf_global_step / total_time
 
         average_loss = accumulated_loss / report_frequency
-        print "[{}] loss={:.2f}, steps/s={:.2f}".format(tf_global_step, tf_loss, steps_per_second)
+        print "[{}] loss={:.2f}, steps/s={:.2f}".format(tf_global_step, average_loss, steps_per_second)
+        writer.add_summary(util.make_summary({"loss": average_loss}), tf_global_step)
         accumulated_loss = 0.0
 
   # Ask for all the services to stop.
