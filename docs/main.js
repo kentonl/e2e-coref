@@ -119,6 +119,6 @@ $(document).ready(function() {
     $("#input-form").submit(function(event){
         event.preventDefault();
         var text = $("#input-doc").val().replace("’", "'");
-        $.getJSON("https://appositive.cs.washington.edu:8080?callback=?", {"text": text});
+        $.getJSON("https://appositive.cs.washington.edu:8080?jsoncallback=?", {"text": text});
     });
 });
