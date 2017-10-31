@@ -56,14 +56,6 @@ if __name__ == "__main__":
   else:
     port = None
 
-  if len(sys.argv) > 3:
-    # For https. See https://certbot.eff.org
-    keyfile = sys.argv[3]
-    certfile = sys.argv[4]
-  else:
-    keyfile = None
-    certfile = None
-
   print "Running experiment: {}.".format(name)
   config = util.get_config("experiments.conf")[name]
   config["log_dir"] = util.mkdirs(os.path.join(config["log_root"], name))
@@ -80,29 +72,29 @@ if __name__ == "__main__":
 
     if port is not None:
       class CorefRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
-        def do_GET(self):
-          idx = self.path.find("?")
-          if idx >= 0:
-            args = cgi.parse_qs(self.path[idx+1:])
-            if "text" in args:
-              text_arg = args["text"]
-              if len(text_arg) == 1 and len(text_arg[0]) <= 10000:
-                text = text_arg[0].decode("utf-8")
-                print(u"Document text: {}".format(text))
-                example = make_predictions(text, model)
-                print_predictions(example)
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json")
-                self.end_headers()
-                self.wfile.write("jsonCallback({})".format(json.dumps(example)))
-                return
+        def do_POST(self):
+          form = cgi.FieldStorage(
+            fp=self.rfile,
+            headers=self.headers,
+            environ={"REQUEST_METHOD":"POST",
+                     "CONTENT_TYPE":self.headers["Content-Type"]
+            })
+          if "text" in form:
+            text = form["text"].value.decode("utf-8")
+            if len(text) <= 10000:
+              print(u"Document text: {}".format(text))
+              example = make_predictions(text, model)
+              print_predictions(example)
+              self.send_response(200)
+              self.send_header("Content-Type", "application/json")
+              self.end_headers()
+              self.wfile.write(json.dumps(example))
+              return
           self.send_response(400)
           self.send_header("Content-Type", "application/json")
           self.end_headers()
 
       server = BaseHTTPServer.HTTPServer(("", port), CorefRequestHandler)
-      if keyfile is not None:
-        server.socket = ssl.wrap_socket(server.socket, keyfile=keyfile, certfile=certfile, server_side=True)
       print("Running server at port {}".format(port))
       server.serve_forever()
     else:

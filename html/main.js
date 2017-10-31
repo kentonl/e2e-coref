@@ -91,34 +91,38 @@ function render_top_spans(top_spans_div, top_spans_data, text, head_scores) {
     });
 }
 
-function jsonCallback(data) {
-    var text_div = $("#text");
-    text_div.empty();
-    var text = [].concat.apply([], data.sentences);
-    $.each(text, function(i, token) {
-        var lrb = $("<span>")
-                .attr("id", "lrb" + i)
-                .appendTo(text_div);
-        var text_span =  $("<span>")
-                .attr("id", "t" + i)
-                .html(token)
-                .appendTo(text_div);
-        var rrb = $("<span>")
-                .attr("id", "rrb" + i)
-                .appendTo(text_div);
-        $("<span>").text(" ").appendTo(text_div);
-    });
-    render_predicted_clusters($("#predicted-clusters"), data.predicted_clusters, text, data.head_scores);
-    render_top_spans($("#top-spans"), data.top_spans, text, data.head_scores);
-    $("#top-spans-title").text("Top Spans");
-    $("#text-title").text("Document");
-    $("#predicted-clusters-title").text("Predicted Clusters");
-}
-
 $(document).ready(function() {
     $("#input-form").submit(function(event){
         event.preventDefault();
         var text = $("#input-doc").val().replace("’", "'");
-        $.getJSON("https://appositive.cs.washington.edu:8080?callback=?", {"text": text});
+        $.ajax({
+            dataType: "json",
+            url: "query.cgi",
+            data: { "text": text },
+            timeout: 60000,
+            success: function(data, statusText, xhr) {
+                var text_div = $("#text");
+                text_div.empty();
+                var text = [].concat.apply([], data.sentences);
+                $.each(text, function(i, token) {
+                    var lrb = $("<span>")
+                            .attr("id", "lrb" + i)
+                            .appendTo(text_div);
+                    var text_span =  $("<span>")
+                            .attr("id", "t" + i)
+                            .html(token)
+                            .appendTo(text_div);
+                    var rrb = $("<span>")
+                            .attr("id", "rrb" + i)
+                            .appendTo(text_div);
+                    $("<span>").text(" ").appendTo(text_div);
+                });
+                render_predicted_clusters($("#predicted-clusters"), data.predicted_clusters, text, data.head_scores);
+                render_top_spans($("#top-spans"), data.top_spans, text, data.head_scores);
+                $("#top-spans-title").text("Top Spans");
+                $("#text-title").text("Document");
+                $("#predicted-clusters-title").text("Predicted Clusters");
+            }
+        });
     });
 });
