@@ -7,7 +7,7 @@ import json
 import numpy as np
 
 import cgi
-import BaseHTTPServer
+from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 import ssl
 
 import tensorflow as tf
@@ -17,6 +17,30 @@ import util
 import nltk
 nltk.download("punkt")
 from nltk.tokenize import sent_tokenize, word_tokenize
+
+class CorefRequestHandler(BaseHTTPRequestHandler):
+  model = None
+  def do_POST(self):
+    form = cgi.FieldStorage(
+      fp=self.rfile,
+      headers=self.headers,
+      environ={"REQUEST_METHOD":"POST",
+               "CONTENT_TYPE":self.headers["Content-Type"]
+      })
+    if "text" in form:
+      text = form["text"].value.decode("utf-8")
+      if len(text) <= 10000:
+        print(u"Document text: {}".format(text))
+        example = make_predictions(text, self.model)
+        print_predictions(example)
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(json.dumps(example))
+        return
+    self.send_response(400)
+    self.send_header("Content-Type", "application/json")
+    self.end_headers()
 
 def create_example(text):
   raw_sentences = sent_tokenize(text)
@@ -71,30 +95,8 @@ if __name__ == "__main__":
     saver.restore(session, checkpoint_path)
 
     if port is not None:
-      class CorefRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
-        def do_POST(self):
-          form = cgi.FieldStorage(
-            fp=self.rfile,
-            headers=self.headers,
-            environ={"REQUEST_METHOD":"POST",
-                     "CONTENT_TYPE":self.headers["Content-Type"]
-            })
-          if "text" in form:
-            text = form["text"].value.decode("utf-8")
-            if len(text) <= 10000:
-              print(u"Document text: {}".format(text))
-              example = make_predictions(text, model)
-              print_predictions(example)
-              self.send_response(200)
-              self.send_header("Content-Type", "application/json")
-              self.end_headers()
-              self.wfile.write(json.dumps(example))
-              return
-          self.send_response(400)
-          self.send_header("Content-Type", "application/json")
-          self.end_headers()
-
-      server = BaseHTTPServer.HTTPServer(("", port), CorefRequestHandler)
+      CorefRequestHandler.model = model
+      server = HTTPServer(("", port), CorefRequestHandler)
       print("Running server at port {}".format(port))
       server.serve_forever()
     else:
