@@ -1,8 +1,8 @@
 #!/bin/bash
 
-curl -O http://appositive.cs.washington.edu/resources/coref/char_vocab.english.txt
+curl -O https://lil.cs.washington.edu/coref/char_vocab.english.txt
 
-curl -O http://appositive.cs.washington.edu/resources/coref/final.tgz
+curl -O https://lil.cs.washington.edu/coref/final.tgz
 mkdir -p logs
 tar -xzvf final.tgz -C logs
 rm final.tgz
