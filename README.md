@@ -7,7 +7,7 @@ This repository contains the code for replicating results from
 * [Kenton Lee](https://homes.cs.washington.edu/~kentonl), [Luheng He](https://homes.cs.washington.edu/~luheng), [Mike Lewis](https://research.fb.com/people/lewis-mike) and [Luke Zettlemoyer](https://www.cs.washington.edu/people/faculty/lsz)
 * In Proceedings of the Conference on Empirical Methods in Natural Language Process (EMNLP), 2017
 
-A demo of the code can be found here: http://www.kentonl.com/e2e-coref.
+A demo of the code can be found here: http://e2e-coref.kentonl.com.
 
 ### Requirements
 * Python 2.7
