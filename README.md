@@ -44,10 +44,6 @@ A demo of the code can be found here: http://e2e-coref.kentonl.com.
 
 * For the command-line demo with the pretrained model:
   * Run `python demo.py final`
-* For the web demo with the pretrained model:
-  * Run `python demo.py final 8080`
-  * Edit the URL at the end of `docs/main.js` to point to the demo location, e.g. `localhost:8080`
-  * Open `docs/index.html` in a web browser.
 * To run the demo with other experiments, replace `final` with your configuration name.
 
 ## Batched Prediction Instructions
