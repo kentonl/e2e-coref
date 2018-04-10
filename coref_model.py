@@ -426,6 +426,12 @@ class CorefModel(object):
     evaluator.update(predicted_clusters, gold_clusters, mention_to_predicted, mention_to_gold)
     return predicted_clusters
 
+  def load_eval_data_one_by_one(self):
+    if self.eval_data is None:
+      with open(self.config["eval_path"]) as f:
+          for idx,jsonline in enumerate(f.readlines()):
+              yield idx,(self.tensorize_example(json.loads(jsonline),is_training=False),json.loads(jsonline))
+      
   def load_eval_data(self):
     if self.eval_data is None:
       oov_counts = [0 for _ in self.embedding_dicts]
