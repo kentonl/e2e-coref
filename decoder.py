@@ -23,8 +23,6 @@ if __name__ == "__main__":
   util.print_config(config)
   model = cm.CorefModel(config)
 
-  model.load_eval_data()
-
   saver = tf.train.Saver()
   log_dir = config["log_dir"]
 
@@ -33,7 +31,7 @@ if __name__ == "__main__":
     saver.restore(session, checkpoint_path)
 
     with open(output_filename, "w") as f:
-      for example_num, (tensorized_example, example) in model.load_eval_data():
+      for example_num, (tensorized_example, example) in model.load_eval_data_one_by_one():
         feed_dict = {i:t for i,t in zip(model.input_tensors, tensorized_example)}
         _, _, _, mention_starts, mention_ends, antecedents, antecedent_scores, head_scores = session.run(model.predictions + [model.head_scores], feed_dict=feed_dict)
         predicted_antecedents = model.get_predicted_antecedents(antecedents, antecedent_scores)
@@ -42,5 +40,5 @@ if __name__ == "__main__":
         example["head_scores"] = head_scores.tolist()
         f.write(json.dumps(example))
         f.write("\n")
-        if example_num % 100 == 0:
-          print "Decoded {} examples.".format(example_num + 1)
+        #if example_num % 100 == 0:
+        print "Decoded {} examples.".format(example_num + 1)

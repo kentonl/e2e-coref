@@ -426,13 +426,22 @@ class CorefModel(object):
     evaluator.update(predicted_clusters, gold_clusters, mention_to_predicted, mention_to_gold)
     return predicted_clusters
 
+  def load_eval_data_one_by_one(self):
+    if self.eval_data is None:
+      with open(self.config["eval_path"]) as f:
+          for idx,jsonline in enumerate(f.readlines()):
+              yield idx,(self.tensorize_example(json.loads(jsonline),is_training=False),json.loads(jsonline))
+      
   def load_eval_data(self):
     if self.eval_data is None:
       oov_counts = [0 for _ in self.embedding_dicts]
       with open(self.config["eval_path"]) as f:
-          for idx,jsonline in enumerate(f.readlines()):
-              yield idx,(self.tensorize_example(json.loads(jsonline),is_training=False, oov_counts=oov_counts),json.loads(jsonline))
-      
+        self.eval_data = map(lambda example: (self.tensorize_example(example, is_training=False, oov_counts=oov_counts), example), (json.loads(jsonline) for jsonline in f.readlines()))
+      num_words = sum(tensorized_example[2].sum() for tensorized_example, _ in self.eval_data)
+      for emb, c in zip(self.config["embeddings"], oov_counts):
+        print("OOV rate for {}: {:.2f}%".format(emb["path"], (100.0 * c) / num_words))
+      print("Loaded {} eval examples.".format(len(self.eval_data)))
+
   def evaluate(self, session, official_stdout=False):
     self.load_eval_data()
 
