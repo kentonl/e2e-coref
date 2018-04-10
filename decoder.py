@@ -40,5 +40,5 @@ if __name__ == "__main__":
         example["head_scores"] = head_scores.tolist()
         f.write(json.dumps(example))
         f.write("\n")
-        #if example_num % 100 == 0:
-        print "Decoded {} examples.".format(example_num + 1)
+        if example_num % 100 == 0:
+          print "Decoded {} examples.".format(example_num + 1)
