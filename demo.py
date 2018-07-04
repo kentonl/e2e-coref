@@ -72,8 +72,8 @@ def make_predictions(text, model):
   return example
 
 if __name__ == "__main__":
-  util.set_gpus()
-
+  # util.set_gpus()
+  # name = 'final'
   name = sys.argv[1]
   if len(sys.argv) > 2:
     port = int(sys.argv[2])
