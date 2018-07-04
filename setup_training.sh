@@ -39,3 +39,4 @@ python minimize.py
 
 python get_char_vocab.py
 python filter_embeddings.py glove.840B.300d.txt train.english.jsonlines dev.english.jsonlines test.english.jsonlines
+python filter_embeddings.py word2vec.300d.txt train.chinese.jsonlines dev.chinese.jsonlines test.chinese.jsonlines

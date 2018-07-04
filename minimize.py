@@ -126,6 +126,7 @@ def minimize_partition(name, language, extension):
       document_state = DocumentState()
       for line in input_file.readlines():
         document = handle_line(line, document_state)
+        # document end
         if document is not None:
           output_file.write(json.dumps(document))
           output_file.write("\n")
@@ -140,3 +141,4 @@ def minimize_language(language):
 
 if __name__ == "__main__":
   minimize_language("english")
+  # minimize_language("chinese")
