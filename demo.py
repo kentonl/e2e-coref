@@ -91,7 +91,8 @@ if __name__ == "__main__":
   log_dir = config["log_dir"]
 
   with tf.Session() as session:
-    checkpoint_path = os.path.join(log_dir, "model.max.ckpt")
+    # checkpoint_path = os.path.join(log_dir, "model.max.ckpt")
+    checkpoint_path = tf.train.latest_checkpoint(log_dir)
     saver.restore(session, checkpoint_path)
 
     if port is not None:

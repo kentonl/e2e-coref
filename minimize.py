@@ -140,5 +140,5 @@ def minimize_language(language):
   minimize_partition("test", language, "v4_gold_conll")
 
 if __name__ == "__main__":
-  minimize_language("english")
-  # minimize_language("chinese")
+  # minimize_language("english")
+  minimize_language("chinese")

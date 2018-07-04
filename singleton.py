@@ -25,10 +25,10 @@ if __name__ == "__main__":
   config["log_dir"] = util.mkdirs(os.path.join(config["log_root"], name))
   util.print_config(config)
 
-  # if "GPU" in os.environ:
-  #   util.set_gpus(int(os.environ["GPU"]))
-  # else:
-  #   util.set_gpus()
+  if "GPU" in os.environ:
+    util.set_gpus(int(os.environ["GPU"]))
+  else:
+    util.set_gpus()
 
   model = cm.CorefModel(config)
   saver = tf.train.Saver()
