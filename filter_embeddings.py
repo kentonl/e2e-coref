@@ -1,4 +1,8 @@
-#!/usr/bin/env python
+# coding:utf-8
+# !/usr/bin/env python
+
+# 缩小embedding文件大小,用以训练
+
 
 import sys
 import json

@@ -17,7 +17,9 @@ dlx $conll_url conll-2012-scripts.v3.tar.gz
 dlx http://conll.cemantix.org/download reference-coreference-scorers.v8.01.tar.gz
 mv reference-coreference-scorers conll-2012/scorer
 
-ontonotes_path=/projects/WebWare6/ontonotes-release-5.0
+# LDC data
+# ontonotes_path=/projects/WebWare6/ontonotes-release-5.0
+ontonotes_path=/data/raw_data/ontonotes
 bash conll-2012/v3/scripts/skeleton2conll.sh -D $ontonotes_path/data/files/data conll-2012
 
 function compile_partition() {
@@ -32,7 +34,9 @@ function compile_language() {
 }
 
 compile_language english
+compile_language chinese
 python minimize.py
 
 python get_char_vocab.py
 python filter_embeddings.py glove.840B.300d.txt train.english.jsonlines dev.english.jsonlines test.english.jsonlines
+python filter_embeddings.py word2vec.300d.txt train.chinese.jsonlines dev.chinese.jsonlines test.chinese.jsonlines
