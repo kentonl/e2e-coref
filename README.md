@@ -44,8 +44,7 @@ This repository contains the code for replicating results from
   * `clusters` should be left empty and is only used for evaluation purposes.
   * `doc_key` indicates the genre, which can be one of the following: `"bc", "bn", "mz", "nw", "pt", "tc", "wb"`
   * `speakers` indicates the speaker of each word. These can be all empty strings if there is only one known speaker.
-* Change the value of `eval_path` in the configuration file to the path to this new file.
-* Run `python predict.py <experiment> <output_file>`, which outputs the original file extended with annotations of the predicted clusters.
+* Run `python predict.py <experiment> <input_file> <output_file>`, which outputs the input jsonlines with predicted clusters.
 
 ## Other Quirks
 
