@@ -1,15 +1,8 @@
-#!/usr/bin/env python
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
-import os
-import sys
-import time
-import json
-import numpy as np
-
-import cgi
-from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
-import ssl
-
+from six.moves import input
 import tensorflow as tf
 import coref_model as cm
 import util
@@ -17,30 +10,6 @@ import util
 import nltk
 nltk.download("punkt")
 from nltk.tokenize import sent_tokenize, word_tokenize
-
-class CorefRequestHandler(BaseHTTPRequestHandler):
-  model = None
-  def do_POST(self):
-    form = cgi.FieldStorage(
-      fp=self.rfile,
-      headers=self.headers,
-      environ={"REQUEST_METHOD":"POST",
-               "CONTENT_TYPE":self.headers["Content-Type"]
-      })
-    if "text" in form:
-      text = form["text"].value.decode("utf-8")
-      if len(text) <= 10000:
-        print(u"Document text: {}".format(text))
-        example = make_predictions(text, self.model)
-        print_predictions(example)
-        self.send_response(200)
-        self.send_header("Content-Type", "application/json")
-        self.end_headers()
-        self.wfile.write(json.dumps(example))
-        return
-    self.send_response(400)
-    self.send_header("Content-Type", "application/json")
-    self.end_headers()
 
 def create_example(text):
   raw_sentences = sent_tokenize(text)
@@ -72,34 +41,10 @@ def make_predictions(text, model):
   return example
 
 if __name__ == "__main__":
-  util.set_gpus()
-
-  name = sys.argv[1]
-  if len(sys.argv) > 2:
-    port = int(sys.argv[2])
-  else:
-    port = None
-
-  print "Running experiment: {}.".format(name)
-  config = util.get_config("experiments.conf")[name]
-  config["log_dir"] = util.mkdirs(os.path.join(config["log_root"], name))
-
-  util.print_config(config)
+  config = util.initialize_from_env()
   model = cm.CorefModel(config)
-
-  saver = tf.train.Saver()
-  log_dir = config["log_dir"]
-
   with tf.Session() as session:
-    checkpoint_path = os.path.join(log_dir, "model.max.ckpt")
-    saver.restore(session, checkpoint_path)
-
-    if port is not None:
-      CorefRequestHandler.model = model
-      server = HTTPServer(("", port), CorefRequestHandler)
-      print("Running server at port {}".format(port))
-      server.serve_forever()
-    else:
-      while True:
-        text = raw_input("Document text: ")
-        print_predictions(make_predictions(text, model))
+    model.restore(session)
+    while True:
+      text = input("Document text: ")
+      print_predictions(make_predictions(text, model))

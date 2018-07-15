@@ -1,22 +1,15 @@
-# End-to-end Neural Coreference Resolution
+# Higher-order Coreference Resolution with Coarse-to-fine Inference
 
-### Introduction
+## Introduction
 This repository contains the code for replicating results from
 
-* [End-to-end Neural Coreference Resolution](https://arxiv.org/abs/1707.07045)
-* [Kenton Lee](https://homes.cs.washington.edu/~kentonl), [Luheng He](https://homes.cs.washington.edu/~luheng), [Mike Lewis](https://research.fb.com/people/lewis-mike) and [Luke Zettlemoyer](https://www.cs.washington.edu/people/faculty/lsz)
-* In Proceedings of the Conference on Empirical Methods in Natural Language Process (EMNLP), 2017
+* [Higher-order Coreference Resolution with Coarse-to-fine Inference](https://arxiv.org/abs/1804.05392)
+* [Kenton Lee](http://kentonl.com/), [Luheng He](https://homes.cs.washington.edu/~luheng), and [Luke Zettlemoyer](https://www.cs.washington.edu/people/faculty/lsz)
+* In NAACL 2018
 
-A demo of the code can be found here: http://e2e-coref.kentonl.com.
+## Getting Started
 
-### Requirements
-* Python 2.7
-  * TensorFlow 1.0.0
-  * pyhocon (for parsing the configurations)
-  * NLTK (for sentence splitting and tokenization in the demo)
-
-### Setting Up
-
+* Install python (either 2 or 3) requirements: `pip install -r requirements.txt`
 * Download pretrained word embeddings and build custom kernels by running `setup_all.sh`.
   * There are 3 platform-dependent ways to build custom TensorFlow kernels. Please comment/uncomment the appropriate lines in the script.
 * Run one of the following:
@@ -28,22 +21,13 @@ A demo of the code can be found here: http://e2e-coref.kentonl.com.
 
 * Experiment configurations are found in `experiments.conf`
 * Choose an experiment that you would like to run, e.g. `best`
-* For a single-machine experiment, run the following two commands:
-  * `python singleton.py <experiment>`
-  * `python evaluator.py <experiment>`
-* For a distributed multi-gpu experiment, edit the `cluster` property of the configuration and run the following commands:
-  * `python parameter_server.py <experiment>`
-  * `python worker.py <experiment>` (for every worker in your cluster)
-  * `python evaluator.py <experiment>` (on the same machine as your first worker)
+* Training: `python train.py <experiment>`
 * Results are stored in the `logs` directory and can be viewed via TensorBoard.
-* For final evaluation of the checkpoint with the maximum dev F1:
-  * Run `python test_single.py <experiment>` for the single-model evaluation.
-  * Run `python test_ensemble.py <experiment1> <experiment2> <experiment3>...` for the ensemble-model evaluation.
+* Evaluation: `python evaluate.py <experiment>`
 
 ## Demo Instructions
 
-* For the command-line demo with the pretrained model:
-  * Run `python demo.py final`
+* Command-line demo: `python demo.py final`
 * To run the demo with other experiments, replace `final` with your configuration name.
 
 ## Batched Prediction Instructions
@@ -61,12 +45,9 @@ A demo of the code can be found here: http://e2e-coref.kentonl.com.
   * `doc_key` indicates the genre, which can be one of the following: `"bc", "bn", "mz", "nw", "pt", "tc", "wb"`
   * `speakers` indicates the speaker of each word. These can be all empty strings if there is only one known speaker.
 * Change the value of `eval_path` in the configuration file to the path to this new file.
-* Run `python decoder.py <experiment> <output_file>`, which outputs the original file extended with annotations of the predicted clusters, the top spans, and the head attention scores.
-* To visualize the predictions, place the output file in the `viz` directory and run `run.sh`. This will run a web server hosting the files in the `viz` directory. If run locally, it can be reached at `http://localhost:8080?path=<output_file>`
+* Run `python predict.py <experiment> <output_file>`, which outputs the original file extended with annotations of the predicted clusters.
 
 ## Other Quirks
 
 * It does not use GPUs by default. Instead, it looks for the `GPU` environment variable, which the code treats as shorthand for `CUDA_VISIBLE_DEVICES`.
-* The evaluator should not be run on GPUs, since evaluating full documents does not fit within GPU memory constraints.
-* The training runs indefinitely and needs to be terminated manually. The model generally converges at about 400k steps and within 48 hours.
-* On some machines, the custom kernels seem to have compatibility issues with virtualenv. If you are using virtualenv and observe segmentation faults, trying running the experiments without virtualenv.
+* The training runs indefinitely and needs to be terminated manually. The model generally converges at about 400k steps.

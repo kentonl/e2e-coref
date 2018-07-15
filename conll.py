@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import re
 import os
@@ -75,12 +77,13 @@ def official_conll_eval(gold_path, predicted_path, metric, official_stdout=False
   stdout, stderr = process.communicate()
   process.wait()
 
+  stdout = stdout.decode("utf-8")
   if stderr is not None:
-    print stderr
+    print(stderr)
 
   if official_stdout:
-    print "Official result for {}".format(metric)
-    print stdout
+    print("Official result for {}".format(metric))
+    print(stdout)
 
   coref_results_match = re.match(COREF_RESULTS_REGEX, stdout)
   recall = float(coref_results_match.group(1))
@@ -89,7 +92,7 @@ def official_conll_eval(gold_path, predicted_path, metric, official_stdout=False
   return { "r": recall, "p": precision, "f": f1 }
 
 def evaluate_conll(gold_path, predictions, official_stdout=False):
-  with tempfile.NamedTemporaryFile(delete=False) as prediction_file:
+  with tempfile.NamedTemporaryFile(delete=False, mode="w") as prediction_file:
     with open(gold_path, "r") as gold_file:
       output_conll(gold_file, prediction_file, predictions)
     print("Predicted conll file: {}".format(prediction_file.name))

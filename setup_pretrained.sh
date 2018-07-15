@@ -1,8 +1,9 @@
 #!/bin/bash
 
-curl -O https://lil.cs.washington.edu/coref/char_vocab.english.txt
+curl -O http://lsz-gpu-01.cs.washington.edu/resources/coref/char_vocab.english.txt
 
-curl -O https://lil.cs.washington.edu/coref/final.tgz
+ckpt_file=c2f_final.tgz
+curl -O http://lsz-gpu-01.cs.washington.edu/resources/coref/$ckpt_file
 mkdir -p logs
-tar -xzvf final.tgz -C logs
-rm final.tgz
+tar -xzvf $ckpt_file -C logs
+rm $ckpt_file

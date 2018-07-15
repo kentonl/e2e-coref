@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import sys
 import json
@@ -21,3 +23,5 @@ def get_char_vocab_language(language):
   get_char_vocab(["{}.{}.jsonlines".format(partition, language) for partition in ("train", "dev", "test")], "char_vocab.{}.txt".format(language))
 
 get_char_vocab_language("english")
+get_char_vocab_language("chinese")
+get_char_vocab_language("arabic")

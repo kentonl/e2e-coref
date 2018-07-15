@@ -1,10 +1,11 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import numpy as np
 from collections import Counter
 from sklearn.utils.linear_assignment_ import linear_assignment
 
-"""
-Mostly borrowed from https://github.com/clarkkev/deep-coref/blob/master/evaluation.py
-"""
 
 def f1(p_num, p_den, r_num, r_den, beta=1):
     p = 0 if p_den == 0 else p_num / float(p_den)
@@ -86,7 +87,7 @@ def b_cubed(clusters, mention_to_gold):
         for m in c:
             if m in mention_to_gold:
                 gold_counts[tuple(mention_to_gold[m])] += 1
-        for c2, count in gold_counts.iteritems():
+        for c2, count in gold_counts.items():
             if len(c2) != 1:
                 correct += count * count
 
