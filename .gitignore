@@ -3,6 +3,7 @@
 *.jsonlines
 logs
 conll-2012
-*.txt
-*.txt.filtered
+char_vocab*.txt
+glove*.txt
+glove*.txt.filtered
 *.v*_*_conll
