@@ -7,3 +7,4 @@ char_vocab*.txt
 glove*.txt
 glove*.txt.filtered
 *.v*_*_conll
+*.hdf5
