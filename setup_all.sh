@@ -1,7 +1,11 @@
 #!/bin/bash
 
+function download_from_gcs() {
+   curl -o $1 https://www.googleapis.com/storage/v1/b/e2e-coref/o/$1?alt=media
+}
+
 # Download pretrained embeddings.
-curl -O http://lsz-gpu-01.cs.washington.edu/resources/glove_50_300_2.txt
+download_from_gcs glove_50_300_2.txt
 curl -O https://nlp.stanford.edu/data/glove.840B.300d.zip
 unzip glove.840B.300d.zip
 rm glove.840B.300d.zip
