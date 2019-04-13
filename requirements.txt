@@ -1,4 +1,4 @@
-tensorflow>1.13.1
+tensorflow-gpu>1.13.1
 tensorflow-hub>0.4.0
 h5py
 nltk
