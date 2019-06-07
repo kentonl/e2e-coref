@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Download pretrained embeddings.
-curl -O https://nlp.stanford.edu/data/glove.840B.300d.zip
+curl -O http://downloads.cs.stanford.edu/nlp/data/glove.840B.300d.zip
 unzip glove.840B.300d.zip
 rm glove.840B.300d.zip
 
