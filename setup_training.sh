@@ -17,6 +17,8 @@ dlx $conll_url conll-2012-scripts.v3.tar.gz
 dlx http://conll.cemantix.org/download reference-coreference-scorers.v8.01.tar.gz
 mv reference-coreference-scorers conll-2012/scorer
 
+sed -i 's/python /python2 /g' conll-2012/v3/scripts/skeleton2conll.sh
+
 ontonotes_path=/projects/WebWare6/ontonotes-release-5.0
 bash conll-2012/v3/scripts/skeleton2conll.sh -D $ontonotes_path/data/files/data conll-2012
 
