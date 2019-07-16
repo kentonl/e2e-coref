@@ -38,7 +38,7 @@ compile_language chinese
 compile_language arabic
 
 python minimize.py
-python get_char_vocab.py
+python2 get_char_vocab.py
 
 python filter_embeddings.py glove.840B.300d.txt train.english.jsonlines dev.english.jsonlines
 python cache_elmo.py train.english.jsonlines dev.english.jsonlines
