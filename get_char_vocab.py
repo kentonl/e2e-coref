@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import sys
 import json
+import io
 
 def get_char_vocab(input_filenames, output_filename):
   vocab = set()
@@ -14,9 +15,10 @@ def get_char_vocab(input_filenames, output_filename):
           for word in sentence:
             vocab.update(word)
   vocab = sorted(list(vocab))
-  with open(output_filename, "w") as f:
+  with io.open(output_filename, mode="w", encoding="utf8") as f:
     for char in vocab:
-      f.write(u"{}\n".format(char).encode("utf8"))
+      f.write(char)
+      f.write(u"\n")
   print("Wrote {} characters to {}".format(len(vocab), output_filename))
 
 def get_char_vocab_language(language):
